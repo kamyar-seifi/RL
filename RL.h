@@ -2,7 +2,7 @@
 //  RL.h
 //  working
 //
-//  Created by kamyar Seifi on 2018-02-03.
+//  Created by kamyar Seifi
 //  Copyright © 2018 kamyar Seifi. All rights reserved.
 //
 

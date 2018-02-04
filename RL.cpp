@@ -3,7 +3,7 @@
 //  
 //
 //  Created by kamyar Seifi.
-//
+// Copyright © 2018 kamyar Seifi. All rights reserved.
 //
 
 #include "RL.h"
@@ -15,31 +15,30 @@ Encode::RL::RL(vector<unsigned char>& input):dta(input){
 
 int Encode::RL::Compress(){
     
-   // vector<pair<unsigned char, unsigned char>> no_rep_seq;  //vector for repeated element count <element, count>
-    
-    auto no_rep_seq = ReturnMap();
+ 
+    auto no_rep_seq = ReturnMap(); //Init map
     
     if(no_rep_seq->empty())
         return -2;
     
-    int new_size = ceil(no_rep_seq->size()*1.5 + 0.5) ; //size approximation: rounded version of this number. second count if not existant will be zero.
+    int new_size = ceil(no_rep_seq->size()*1.5 + 0.5) ; //size approx
     
-    if(new_size>=dta.size())  //encode the input if file can be cocmpressed.
+    if(new_size>=dta.size())
         return -1;
     else{
-        dta.clear(); //clearing the input data to write encoded file.
+        dta.clear();
         for(auto i : (*no_rep_seq))
             dta.push_back(i.first);  //write the non-repeated data from the map
         
-        //write a flag and the first count in the initial header byte.
-        auto temp_first = no_rep_seq->front().second;
+        
+        auto temp_first = no_rep_seq->front().second;  //first load
         temp_first = 0x80 | temp_first;
         dta.push_back((unsigned char)temp_first);
         no_rep_seq->erase(no_rep_seq->begin());
         
         
-        //write the rest of the count header from the map vector
-        while(!no_rep_seq->empty()){
+        
+        while(!no_rep_seq->empty()){   //loading the rest
             auto temp = no_rep_seq->front().second;
             no_rep_seq->erase(no_rep_seq->begin());
             temp = temp << 4;
@@ -51,7 +50,7 @@ int Encode::RL::Compress(){
         }
     }
     delete no_rep_seq;
-    return (int)dta.size();  //the size of encoded input.
+    return (int)dta.size();
     }
 
 
@@ -70,17 +69,17 @@ auto Encode::RL::ReturnMap(void)->vector<pair<unsigned char, unsigned char>>*{
     (*map).clear();
     
     if(!dta.empty()){
-        for(int i=0;i<(int)dta.size() ; i++){   //loop through the input data
+        for(int i=0;i<(int)dta.size() ; i++){
             int j=i;
             int count=1;
-            for(;dta[j]==dta[j+1]; j++);  //find the repeated elements
+            for(;dta[j]==dta[j+1]; j++);
         
-            count += j-i;  //calculate the repetition count;
-            i=j; //jump to nonrepeated element next round
+            count += j-i;
+            i=j;
         
             if(count<=15){
-                pair<unsigned char, unsigned char> temp = {dta[j], count}; //save the <element, count> in a pair
-                (*map).push_back(temp);  // add these pairs to the map vector
+                pair<unsigned char, unsigned char> temp = {dta[j], count};
+                (*map).push_back(temp);
             }
             else
                 (*map).clear();
@@ -117,9 +116,9 @@ int Encode::RL::Decompress(){
         map.push_back(temp);
     }
     
-    dta.clear(); //clear the encoded input
+    dta.clear();
     
-    while(!map.empty()){     //decode the <element, count> vector into the input vector
+    while(!map.empty()){
         auto a = map.front();
         for(unsigned char i=0; i<a.second; i++)
             dta.push_back(a.first);
