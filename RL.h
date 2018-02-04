@@ -27,10 +27,14 @@ public:
     int Compress(void);
     
     //@Iscompressed: predicator for checking the compressed data
+    //@return: boolean indicator
     bool IsCompressed(void);
+    
     //@Decompress: decompressing the data
+    //@return: size of decompressed data
     int Decompress(void);
     
+    //display()
     void Disp(void); 
     
     //@ReturnMap: the map of the pair of the count and element
