@@ -10,14 +10,12 @@
 #include "math.h"
 #include <iostream>
 Encode::RL::RL(vector<unsigned char>& input):dta(input){
-
 }
 
 int Encode::RL::Compress(){
-    
  
     auto no_rep_seq = ReturnMap(); //Init map
-    
+
     if(no_rep_seq->empty())
         return -2;
     
@@ -30,13 +28,10 @@ int Encode::RL::Compress(){
         for(auto i : (*no_rep_seq))
             dta.push_back(i.first);  //write the non-repeated data from the map
         
-        
         auto temp_first = no_rep_seq->front().second;  //first load
         temp_first = 0x80 | temp_first;
         dta.push_back((unsigned char)temp_first);
         no_rep_seq->erase(no_rep_seq->begin());
-        
-        
         
         while(!no_rep_seq->empty()){   //loading the rest
             auto temp = no_rep_seq->front().second;
@@ -115,7 +110,6 @@ int Encode::RL::Decompress(){
         pair<unsigned char, unsigned char> temp = {dta[i], count};
         map.push_back(temp);
     }
-    
     dta.clear();
     
     while(!map.empty()){
